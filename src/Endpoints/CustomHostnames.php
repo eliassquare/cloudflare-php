@@ -80,6 +80,32 @@ class CustomHostnames implements API
     }
 
     /**
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     *
+     * @param string $zoneID
+     * @param string $hostname
+     * @param string $customOriginServer
+     * @return \stdClass
+     */
+    public function addNoCertHostname(
+        string $zoneID,
+        string $hostname,
+         string $customOriginServer = ''
+   ): \stdClass {
+        $options = [
+            'hostname' => $hostname,
+        ];
+
+        if (!empty($customOriginServer)) {
+            $options['custom_origin_server'] = $customOriginServer;
+        }
+
+        $zone = $this->adapter->post('zones/'.$zoneID.'/custom_hostnames', $options);
+        $this->body = json_decode($zone->getBody());
+        return $this->body->result;
+    }
+
+    /**
      * @param string $zoneID
      * @param string $hostname
      * @param string $id
